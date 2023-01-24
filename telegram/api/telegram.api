@@ -45,6 +45,7 @@ public final class com/github/kotlintelegrambot/Bot {
 	public final fun getChatAdministrators (Lcom/github/kotlintelegrambot/entities/ChatId;)Lcom/github/kotlintelegrambot/types/TelegramBotResult;
 	public final fun getChatMember (Lcom/github/kotlintelegrambot/entities/ChatId;J)Lcom/github/kotlintelegrambot/types/TelegramBotResult;
 	public final fun getChatMemberCount (Lcom/github/kotlintelegrambot/entities/ChatId;)Lkotlin/Pair;
+	public final fun getCompletions (Ljava/lang/String;)Lcom/github/kotlintelegrambot/network/CompletionResponse;
 	public final fun getFile (Ljava/lang/String;)Lkotlin/Pair;
 	public final fun getMe ()Lcom/github/kotlintelegrambot/types/TelegramBotResult;
 	public final fun getMyCommands ()Lcom/github/kotlintelegrambot/types/TelegramBotResult;
@@ -184,6 +185,30 @@ public final class com/github/kotlintelegrambot/BotKt {
 	public static final fun bot (Lkotlin/jvm/functions/Function1;)Lcom/github/kotlintelegrambot/Bot;
 	public static final fun dispatch (Lcom/github/kotlintelegrambot/Bot$Builder;Lkotlin/jvm/functions/Function1;)V
 	public static final fun webhook (Lcom/github/kotlintelegrambot/Bot$Builder;Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class com/github/kotlintelegrambot/CompletionRequest {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;IIIII)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;IIIIIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()I
+	public final fun component4 ()I
+	public final fun component5 ()I
+	public final fun component6 ()I
+	public final fun component7 ()I
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;IIIII)Lcom/github/kotlintelegrambot/CompletionRequest;
+	public static synthetic fun copy$default (Lcom/github/kotlintelegrambot/CompletionRequest;Ljava/lang/String;Ljava/lang/String;IIIIIILjava/lang/Object;)Lcom/github/kotlintelegrambot/CompletionRequest;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFrequency_penalty ()I
+	public final fun getMax_tokens ()I
+	public final fun getModel ()Ljava/lang/String;
+	public final fun getPresence_penalty ()I
+	public final fun getPrompt ()Ljava/lang/String;
+	public final fun getTemperature ()I
+	public final fun getTop_p ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class com/github/kotlintelegrambot/dispatcher/Dispatcher {
@@ -3116,6 +3141,44 @@ public final class com/github/kotlintelegrambot/logging/LogLevel$None : com/gith
 	public static final field INSTANCE Lcom/github/kotlintelegrambot/logging/LogLevel$None;
 }
 
+public final class com/github/kotlintelegrambot/network/Choice {
+	public fun <init> (Ljava/lang/String;JLjava/lang/Object;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()J
+	public final fun component3 ()Ljava/lang/Object;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;JLjava/lang/Object;Ljava/lang/String;)Lcom/github/kotlintelegrambot/network/Choice;
+	public static synthetic fun copy$default (Lcom/github/kotlintelegrambot/network/Choice;Ljava/lang/String;JLjava/lang/Object;Ljava/lang/String;ILjava/lang/Object;)Lcom/github/kotlintelegrambot/network/Choice;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFinishReason ()Ljava/lang/String;
+	public final fun getIndex ()J
+	public final fun getLogprobs ()Ljava/lang/Object;
+	public final fun getText ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/kotlintelegrambot/network/CompletionResponse {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;Ljava/util/List;Lcom/github/kotlintelegrambot/network/Usage;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()J
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/util/List;
+	public final fun component6 ()Lcom/github/kotlintelegrambot/network/Usage;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;Ljava/util/List;Lcom/github/kotlintelegrambot/network/Usage;)Lcom/github/kotlintelegrambot/network/CompletionResponse;
+	public static synthetic fun copy$default (Lcom/github/kotlintelegrambot/network/CompletionResponse;Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;Ljava/util/List;Lcom/github/kotlintelegrambot/network/Usage;ILjava/lang/Object;)Lcom/github/kotlintelegrambot/network/CompletionResponse;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getChoices ()Ljava/util/List;
+	public final fun getCreated ()J
+	public final fun getId ()Ljava/lang/String;
+	public final fun getModel ()Ljava/lang/String;
+	public final fun getObject_field ()Ljava/lang/String;
+	public final fun getUsage ()Lcom/github/kotlintelegrambot/network/Usage;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class com/github/kotlintelegrambot/network/LabeledPriceList {
 	public fun <init> (Ljava/util/List;)V
 	public fun toString ()Ljava/lang/String;
@@ -3151,6 +3214,21 @@ public final class com/github/kotlintelegrambot/network/ResponseError {
 	public fun <init> (Lokhttp3/ResponseBody;Ljava/lang/Exception;)V
 	public final fun getErrorBody ()Lokhttp3/ResponseBody;
 	public final fun getException ()Ljava/lang/Exception;
+}
+
+public final class com/github/kotlintelegrambot/network/Usage {
+	public fun <init> (JJJ)V
+	public final fun component1 ()J
+	public final fun component2 ()J
+	public final fun component3 ()J
+	public final fun copy (JJJ)Lcom/github/kotlintelegrambot/network/Usage;
+	public static synthetic fun copy$default (Lcom/github/kotlintelegrambot/network/Usage;JJJILjava/lang/Object;)Lcom/github/kotlintelegrambot/network/Usage;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCompletionTokens ()J
+	public final fun getPromptTokens ()J
+	public final fun getTotalTokens ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class com/github/kotlintelegrambot/network/UtilsKt {

@@ -26,6 +26,7 @@ import com.github.kotlintelegrambot.entities.polls.PollType
 import com.github.kotlintelegrambot.entities.stickers.MaskPosition
 import com.github.kotlintelegrambot.logging.LogLevel
 import com.github.kotlintelegrambot.network.ApiClient
+import com.github.kotlintelegrambot.network.CompletionResponse
 import com.github.kotlintelegrambot.network.bimap
 import com.github.kotlintelegrambot.network.call
 import com.github.kotlintelegrambot.network.serialization.GsonFactory
@@ -264,6 +265,8 @@ class Bot private constructor(
         allowSendingWithoutReply,
         replyMarkup
     )
+
+    fun getCompletions(text: String) = apiClient.getCompletions(text)
 
     /**
      * Use this method to forward messages of any kind. Service messages can't be forwarded.

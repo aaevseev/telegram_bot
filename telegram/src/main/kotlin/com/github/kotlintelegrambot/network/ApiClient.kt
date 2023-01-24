@@ -1,5 +1,7 @@
 package com.github.kotlintelegrambot.network
 
+import com.github.kotlintelegrambot.CompletionRequest
+import com.github.kotlintelegrambot.Messages
 import com.github.kotlintelegrambot.entities.BotCommand
 import com.github.kotlintelegrambot.entities.Chat
 import com.github.kotlintelegrambot.entities.ChatAction
@@ -76,17 +78,18 @@ internal class ApiClient(
 ) {
 
     private val service: ApiService
+    private val openAIService: OpenAIService
 
     // TODO check if init is the best approach for this
     init {
-        val logging = HttpLoggingInterceptor().apply { level = logLevel.toOkHttpLogLevel() }
+        val logging = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
 
         val httpClient = OkHttpClient.Builder()
             .connectTimeout(botTimeout + 10L, TimeUnit.SECONDS)
             .readTimeout(botTimeout + 10L, TimeUnit.SECONDS)
             .writeTimeout(botTimeout + 10L, TimeUnit.SECONDS)
             .addInterceptor(logging)
-            .retryOnConnectionFailure(true)
+            .retryOnConnectionFailure(false)
             .proxy(proxy)
             .build()
 
@@ -104,7 +107,15 @@ internal class ApiClient(
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
 
+        val openAIRetrofit = Retrofit.Builder()
+            .baseUrl("https://api.openai.com/v1/")
+            .client(httpClient)
+            .addConverterFactory(DiceEmojiConverterFactory())
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+
         service = retrofit.create(ApiService::class.java)
+        openAIService = openAIRetrofit.create(OpenAIService::class.java)
     }
 
     fun getUpdates(
@@ -195,6 +206,10 @@ internal class ApiClient(
         allowSendingWithoutReply,
         replyMarkup
     ).runApiOperation()
+
+    fun getCompletions(
+        text: String,
+    ) = openAIService.getCompletions(completionRequest = CompletionRequest(messages = listOf(Messages(content = text)))).execute().body()
 
     fun forwardMessage(
         chatId: ChatId,
@@ -1337,8 +1352,10 @@ internal class ApiClient(
 
     private fun <T> Call<Response<T>>.runApiOperation(): TelegramBotResult<T> {
         val apiResponse = try {
+            println("testCallTry $this")
             apiRequestSender.send(this)
         } catch (exception: Exception) {
+            println("testCallFailed $exception")
             return TelegramBotResult.Error.Unknown(exception)
         }
 
