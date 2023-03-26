@@ -2,29 +2,32 @@ package com.github.kotlintelegrambot.bot
 
 import com.github.kotlintelegrambot.bot
 import com.github.kotlintelegrambot.dispatch
+import com.github.kotlintelegrambot.dispatcher.command
 import com.github.kotlintelegrambot.dispatcher.telegramError
 import com.github.kotlintelegrambot.dispatcher.text
 import com.github.kotlintelegrambot.entities.ChatId
 import com.github.kotlintelegrambot.entities.ParseMode
-import com.github.kotlintelegrambot.network.CONFIG.BOT_NAME
-import com.github.kotlintelegrambot.network.CONFIG.BOT_TOKEN
-import com.github.kotlintelegrambot.network.CONFIG.OPEN_AI_TOKEN
+import com.github.kotlintelegrambot.network.CONFIG
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
 fun main(args: Array<String>) {
 
-    BOT_NAME = args[0]
-    BOT_TOKEN = args[1]
-    OPEN_AI_TOKEN = args[2]
+    CONFIG.BOT_NAME = args[0]
+    CONFIG.BOT_TOKEN = args[1]
+    CONFIG.OPEN_AI_TOKEN = args[2]
+    CONFIG.STABLE_DIFFUSION = args[3]
 
     val bot = bot {
-        token = BOT_TOKEN
+        token = CONFIG.BOT_TOKEN
 
         dispatch {
+            command("image") {
+                bot.sendMessage(chatId = ChatId.fromId(update.message!!.chat.id), text = "За звон шекелей да")
+            }
             text {
                 when {
-                    message.chat.type == "private" -> {
+                    message.replyToMessage?.from?.id == bot.getMe().get().id -> {
                         val result = bot.getCompletions(text = message.text.orEmpty())
                         bot.sendMessage(
                             chatId = ChatId.fromId(message.chat.id),
@@ -32,7 +35,7 @@ fun main(args: Array<String>) {
                             text = result?.choices?.get(0)?.message?.content.toString()
                         )
                     }
-                    text == "$BOT_NAME, сервер" -> {
+                    text == "${CONFIG.BOT_NAME}, сервер" -> {
                         bot.sendMessage(
                             chatId = ChatId.fromId(message.chat.id),
                             parseMode = ParseMode.MARKDOWN,
@@ -42,7 +45,15 @@ fun main(args: Array<String>) {
                                 "\nЗагрузка CPU: ```${startCommand("vmstat 1 2 | awk 'FNR>3{print $(NF-3)}'")}%```"
                         )
                     }
-                    text.contains("$BOT_NAME,") -> {
+                    message.chat.type == "private" -> {
+                        val result = bot.getCompletions(text = message.text.orEmpty())
+                        bot.sendMessage(
+                            chatId = ChatId.fromId(message.chat.id),
+                            replyToMessageId = ChatId.fromId(message.messageId).id,
+                            text = result?.choices?.get(0)?.message?.content.toString()
+                        )
+                    }
+                    text.contains("${CONFIG.BOT_NAME},") -> {
                         val result = bot.getCompletions(text = message.text.orEmpty())
                         bot.sendMessage(
                             chatId = ChatId.fromId(message.chat.id),
