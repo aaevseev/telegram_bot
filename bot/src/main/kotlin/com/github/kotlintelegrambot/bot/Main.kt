@@ -2,7 +2,6 @@ package com.github.kotlintelegrambot.bot
 
 import com.github.kotlintelegrambot.bot
 import com.github.kotlintelegrambot.dispatch
-import com.github.kotlintelegrambot.dispatcher.command
 import com.github.kotlintelegrambot.dispatcher.telegramError
 import com.github.kotlintelegrambot.dispatcher.text
 import com.github.kotlintelegrambot.entities.ChatId
@@ -22,15 +21,13 @@ fun main(args: Array<String>) {
         token = CONFIG.BOT_TOKEN
 
         dispatch {
-            command("image") {
-                bot.sendMessage(chatId = ChatId.fromId(update.message!!.chat.id), text = "За звон шекелей да")
-            }
             text {
                 when {
                     message.replyToMessage?.from?.id == bot.getMe().get().id -> {
                         val result = bot.getCompletions(text = message.text.orEmpty())
                         bot.sendMessage(
                             chatId = ChatId.fromId(message.chat.id),
+                            parseMode = ParseMode.MARKDOWN,
                             replyToMessageId = ChatId.fromId(message.messageId).id,
                             text = result?.choices?.get(0)?.message?.content.toString()
                         )
