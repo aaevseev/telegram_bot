@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName as Name
 
 data class CompletionRequest(
     @Name("model")
-    val model: String = "gpt-3.5-turbo",
+    val model: String = "gpt-4",
     @Name("messages")
     val messages: List<Messages>
 )
